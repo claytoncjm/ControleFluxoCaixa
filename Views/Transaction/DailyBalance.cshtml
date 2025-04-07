@@ -1,0 +1,54 @@
+@model IEnumerable<ControleFluxoCaixa.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Balanço Diário";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form method="get" class="form-inline">
+            <div class="input-group">
+                <input type="date" name="date" class="form-control" value="@ViewBag.Date.ToString("yyyy-MM-dd")" />
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Saldo do dia @ViewBag.Date.ToString("dd/MM/yyyy")</h5>
+        <h3 class="@(ViewBag.Balance >= 0 ? "text-success" : "text-danger")">
+            @ViewBag.Balance.ToString("C")
+        </h3>
+    </div>
+</div>
+
+<h4>Lançamentos do dia</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Hora</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+            <th>Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Date.ToString("HH:mm")</td>
+                <td>@(item.Type == TransactionType.Credit ? "Crédito" : "Débito")</td>
+                <td>@item.Amount.ToString("C")</td>
+                <td>@item.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>
